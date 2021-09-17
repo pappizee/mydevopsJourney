@@ -71,3 +71,4 @@ Saved the above and check this has been rendered on the web
   This should already be visible on the web browser `http://  iP/info.php` and as best practice , I always remove files that were created just to be sure relevant information about the php is not visible to the public
   `sudo rm /var/www/domain/info.php
 
+**** This is where i stop for my project 2***
