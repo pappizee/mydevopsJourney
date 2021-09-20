@@ -66,9 +66,8 @@ Saved the above and check this has been rendered on the web
   `sudo vi /var/www/lempproject/info.php` then paste 
   `<?php
    phpinfo();
+ `
 
-
-  This should already be visible on the web browser `http://  iP/info.php` and as best practice , I always remove files that were created just to be sure relevant information about the php is not visible to the public
+  This should already be visible on the web browser `http://172.31.24.154/info.php` and as best practice , I always remove files that were created just to be sure relevant information about the php is not visible to the public
   `sudo rm /var/www/domain/info.php
 
-**** This is where i stop for my project 2***
