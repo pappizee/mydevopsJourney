@@ -57,17 +57,82 @@ I need to disable the default nginx host that currently works to listen on port 
 
  Now i reloaded my nginx to reflect my changes 
  `sudo systemctl reload nginx` which i now need to create an index.html within the lempproject root directory for test purposes, To do that i used this code snippet 
- ````sudo echo 'Hello Pappizee's Lemp from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/lempproject/index.html
+ ````sudo echo 'Hello LEMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/lempproject/index.html
 ```` 
 Saved the above and check this has been rendered on the web 
   ### Verifying PHP with Nginx
 
   This piece would just validate what has been installed in the previous installation steps so i would be opening nmy info.php file
-  `sudo vi /var/www/lempproject/info.php` then paste 
+  `sudo vim /var/www/lempproject/info.php` then paste 
   `<?php
    phpinfo();
  `
 
   This should already be visible on the web browser `http://172.31.24.154/info.php` and as best practice , I always remove files that were created just to be sure relevant information about the php is not visible to the public
-  `sudo rm /var/www/domain/info.php
+  `sudo rm /var/www/lempproject/info.php`
 
+  ### Retriving Data from the mySql Database using PHP
+   On the backend, I would like to create a db that is linked to a todo list application and i can configure access to it, whereby my nginx website would be able to query data from the set DB and display its output.
+
+The first thing that was done was to create a new user with the `mysql_native_password` command method so as to be able to connect to my db via the php, Below are my steps to achieve this :
+
+Connecting to mysql console
+`sudo mysql`
+
+Create a new database 
+`mysql> CREATE DATABASE` `pappizee_database`;
+
+After creating the database, I then created a user and granted full privilege to the newly created database by doing the below :
+ezzee_user with the mysql_native_password been the default auth method, Password as "Welcome01"
+`mysql>  CREATE USER 'ezzee_user'@'%' IDENTIFIED WITH mysql_native_password BY 'Welcome01';`
+then giving the person to the created user over the created database
+`mysql> GRANT ALL ON pappizee_database.* TO 'ezzee_user'@'%';`
+The logic above gives my created user full privilege over the created database BUT is limited to modifying or creating other database on the server.
+`mysql> exit` to exit the sql console
+
+**validating my new user has the set permission**
+`mysql -u ezzee_user -p` , at the password prompt i entered my set password when creating my user and i was successfully logged in the mysql database . Then to view my database content 
+`mysql> SHOW DATABASES;`
+
+Once verified,I created a table called *todo_things* by using the below command :
+```
+CREATE TABLE pappizee_database.todo_things (
+mysql>     item_id INT AUTO_INCREMENT,
+mysql>     content VARCHAR(255),
+mysql>     PRIMARY KEY(item_id)
+mysql> );
+```
+I then proceeded to inserting a rows in my todo content by updating my insert statement with new values
+`mysql> INSERT INTO pappizee_database.todo_things (content) VALUES ("My project 2 in progress");`
+`mysql> INSERT INTO pappizee_database.todo_things (content) VALUES ("My project 3 in the works");`
+`mysql> INSERT INTO pappizee_database.todo_things (content) VALUES ("Can't wait to start project 4");`
+Now i need to verify my inserted values 
+`mysql>  SELECT * FROM pappizee_database.todo_list;`
+
+After validation i exited the console 
+`mysql> exit`
+
+`vim /var/www/lempproject/todo_things.php`
+
+***Lastly*** I created a php script that will connect to mySQL db and queries for the content of the todo_things table which would then render the result on the screen and catch any exception provided there is any error with database connection or called service.
+ `todo_things.php`
+ ```
+ <?php
+$user = "ezzee_user";
+$password = "Welcome01";
+$database = "pappizee_database";
+$table = "todo_things";
+
+try {
+  $db = new PDO("mysql:host=localhost;dbname=$database", $user, $password);
+  echo "<h2>TODO</h2><ol>";
+  foreach($db->query("SELECT content FROM $table") as $row) {
+    echo "<li>" . $row['content'] . "</li>";
+  }
+  echo "</ol>";
+} catch (PDOException $e) {
+    print "Error!: " . $e->getMessage() . "<br/>";
+    die();
+}
+```
+When i navigate to my domain then `/todo_things.php` my page displays as i would expect.
