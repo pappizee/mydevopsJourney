@@ -84,7 +84,7 @@ Create a new database
 
 After creating the database, I then created a user and granted full privilege to the newly created database by doing the below :
 ezzee_user with the mysql_native_password been the default auth method, Password as "Welcome01"
-`mysql>  CREATE USER 'ezzee_user'@'%' IDENTIFIED WITH mysql_native_password BY 'Welcome01';`
+`mysql>  CREATE USER 'ezzee_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';`
 then giving the person to the created user over the created database
 `mysql> GRANT ALL ON pappizee_database.* TO 'ezzee_user'@'%';`
 The logic above gives my created user full privilege over the created database BUT is limited to modifying or creating other database on the server.
@@ -97,10 +97,10 @@ The logic above gives my created user full privilege over the created database B
 Once verified,I created a table called *todo_things* by using the below command :
 ```
 CREATE TABLE pappizee_database.todo_things (
-mysql>     item_id INT AUTO_INCREMENT,
-mysql>     content VARCHAR(255),
-mysql>     PRIMARY KEY(item_id)
-mysql> );
+item_id INT AUTO_INCREMENT,
+content VARCHAR(255),
+PRIMARY KEY(item_id)
+);
 ```
 I then proceeded to inserting a rows in my todo content by updating my insert statement with new values
 `mysql> INSERT INTO pappizee_database.todo_things (content) VALUES ("My project 2 in progress");`
@@ -119,7 +119,7 @@ After validation i exited the console
  ```
  <?php
 $user = "ezzee_user";
-$password = "Welcome01";
+$password = "password";
 $database = "pappizee_database";
 $table = "todo_things";
 
