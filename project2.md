@@ -136,3 +136,9 @@ try {
 }
 ```
 When i navigate to my domain then `/todo_things.php` my page displays as i would expect.
+
+![Echoed Nginx](https://github.com/pappizee/mydevopsJourney/blob/7e8ce7f46bf455f741aa6b177bb704048c186d9f/images/echoed%20nginx.png)
+
+![Nginx rendered page](https://github.com/pappizee/mydevopsJourney/blob/7e8ce7f46bf455f741aa6b177bb704048c186d9f/images/nginx%20php%20rendered%20page.png)
+
+![ToDo List App created](https://github.com/pappizee/mydevopsJourney/blob/7e8ce7f46bf455f741aa6b177bb704048c186d9f/images/Completed%20project%202.png)
